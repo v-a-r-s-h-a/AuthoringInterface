@@ -1,0 +1,116 @@
+.cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cards #card {
+    background-color: rgb(191, 221, 230);
+    width: 200px;
+    height: 100px;
+    border-radius: 5px;
+    margin: 10px;
+    text-align: center;
+    padding-top: 30px;
+}
+.cards #card:hover {
+    width: 220px;
+    height: 110px;
+}
+.components{
+    overflow: hidden;
+        width: 100%;
+}
+.discourse_but{
+    margin: 50px;
+    margin-left: 45%;
+}
+
+.dis_table table th {
+    background: rgb(191, 221, 230);
+    border-radius: 0px;
+    padding: 10px;
+}
+
+.dis_table table{
+    table-layout: fixed;
+    width: 100%;
+    border: 1px solid;
+    margin-right: 20px;
+    margin-left: 10px;
+    border-collapse: collapse;
+}
+.dis_table table td {
+    background: #ffffff;
+    border-radius: 0px;
+    padding: 10px;
+    width: 100%;
+}
+
+.dis_table table tr {
+    background: #a12c2c;
+    border-radius: 0px;
+    padding: 10px;
+    width: 100%;
+}
+
+#action_button:hover{
+    width: 35px;
+    height: 35px;
+    background:transparent;
+}
+i::before{
+    background:transparent;
+}
+
+.add_dis {
+    margin-left: 90%;
+}
+
+.but {
+    margin-right: 3px;
+    margin-bottom: 3px;
+}
+
+/* Popup container */
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* The actual popup (appears on top) */
+.popup .popuptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s
+}
+
