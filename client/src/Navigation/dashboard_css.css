@@ -14,8 +14,7 @@
     padding-top: 30px;
 }
 .cards #card:hover {
-    width: 220px;
-    height: 110px;
+    transform: translateY(-5px);
 }
 .components{
     overflow: hidden;
@@ -26,41 +25,72 @@
     margin-left: 45%;
 }
 
-.dis_table table th {
-    background: rgb(191, 221, 230);
-    border-radius: 0px;
-    padding: 10px;
-}
-
-.dis_table table{
-    table-layout: fixed;
-    width: 100%;
-    border: 1px solid;
-    margin-right: 20px;
-    margin-left: 10px;
-    border-collapse: collapse;
-}
-.dis_table table td {
-    background: #ffffff;
-    border-radius: 0px;
-    padding: 10px;
-    width: 100%;
-}
-
-.dis_table table tr {
-    background: #a12c2c;
-    border-radius: 0px;
-    padding: 10px;
-    width: 100%;
-}
+a { cursor: pointer; }
 
 #action_button:hover{
-    width: 35px;
-    height: 35px;
-    background:transparent;
+    transform: translateY(-5px);
 }
-i::before{
-    background:transparent;
+
+.dis_table_row{
+    display: flex;
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.3);
+}
+.dis_table_row1{
+    display: flex;
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.3);
+    background-color: rgb(191, 221, 230);
+    height: 40px;
+    padding-top: 10px;
+    justify-content: center;
+}
+.dis_table_col{
+    text-align: center;
+    justify-content: center;
+    width: 20%;
+}
+
+
+.but, .usr_a{
+    color: black;
+  align-items: center;
+  background-image: linear-gradient(144deg,#d1a9ef, #89c4fc 10%,#9bf8ff);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  font-family: Phantomsans, sans-serif;
+  font-size: 20px;
+  justify-content: center;
+  /* line-height: 1em; */
+  /* max-width: 100%;
+  min-width: 140px; */
+  width: 30%;
+  padding: 10px 15px;
+  /* text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none; */
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* button:active,
+button:hover {
+  outline: 0;
+} */
+
+@media (min-width: 768px) {
+  .but {
+    font-size: 24px;
+    /* min-width: 196px; */
+  }
 }
 
 .add_dis {

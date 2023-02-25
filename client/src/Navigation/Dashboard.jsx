@@ -3,38 +3,50 @@ import { FaEdit, FaEye, FaPlusCircle, FaTrash, FaUser } from "react-icons/fa";
 import "./dashboard_css.css";
 import Button from "@material-ui/core/Button";
 import { useState, useEffect } from 'react';
+import getdata from "../services/test";
+// import TextField from '@material-ui/core/TextField';
+import React from 'react';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 
 const Dashboard = () => {
 
   const [users, setUsers] = useState([])
+  const [discourse, setdis] = useState([])
+  const [autnam, setautnam] = useState([])
+  const [counts, setcounts] = useState([])
+  let counter = 0;
 
+  let counter2 = 0;
 
-
-  // const allMessages = ["{'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': ['', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}", "{'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': ['', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}", "{'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': ['', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}", "{'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': ['', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}"]
-  // function showHint(index) {
-  //   const messageBox = document.getElementById('messageBox')
-  //   messageBox.textContent = allMessages[index]
-  // }
-
-  const fetchData = () => {
-    fetch("http://localhost:9999/dash_data")
-      .then(response => {
-        return response.json()
-      })
-      .then(data => {
-        setUsers(data)
-      })
-  }
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    Promise.all([
+      fetch('http://localhost:9999/dash_data'),
+      fetch('http://localhost:9999/authName'),
+      fetch('http://localhost:9999/about'),
+    ])
+      .then(([resUsers, resAut, resabout]) =>
+        Promise.all([resUsers.json(), resAut.json(), resabout.json()])
+      )
+      .then(([dataUsers, dataAuth, dataCount]) => {
+        setUsers(dataUsers);
+        setautnam(dataAuth);
+        setcounts(dataCount);
+      });
+  }, []);
 
-  function myFunction() {
-    var popup = document.getElementById("myPopup");
-    popup.classList.toggle("show");
+  async function getdatavalues() {
+    const response = await getdata()
+    if (response.status === 200) {
+      setdis(response.data)
+    }
   }
+  function refreshPage() {
+    window.location.reload(false);
+  }
+  // console.log(users.discourse_count)
 
   return (
     <>
@@ -46,9 +58,7 @@ const Dashboard = () => {
           <ul id="navbar">
             <li>
               <NavLink to="/dashboard">
-                <FaUser></FaUser> Username :
-                {/* {users.map(user => ({ user.author_id }))} */}
-                {/* {session.get(author_id)} */}
+                <FaUser></FaUser> Username : {autnam.author_name}
               </NavLink>
             </li>
             <li>
@@ -59,71 +69,97 @@ const Dashboard = () => {
           </ul>
         </div>
       </nav>
+
       <div class="components">
         <div class="cards">
-          <div id="card">5 Discourses created</div>
-          <div id="card">25 USRs Generated</div>
-          <div id="card">2 Discourses Approved</div>
+          <div id="card">{counts.discourse_count} Discourses created</div>
+          <div id="card">{counts.usr_count} USRs Generated</div>
+          <div id="card">4 Discourses Approved</div>
           <div id="card">
             <a href="http://localhost:3000/usrgenerate">
               <FaPlusCircle size="50px" color="black"></FaPlusCircle>
             </a>
           </div>
         </div>
+        {/* <div>
+          <button onClick={refreshPage}>Click to reload!</button>
+        </div> */}
 
-        <div class="discourse_but">
+        {/* <div class="discourse_but">
           <Button variant="contained" href="http://localhost:9999/dash_out">
             See Discourses
           </Button>
-        </div>
-
-
-
+        </div> */}
         <div class="dis_table">
-          <table>
-            <tr>
-              <th>S.No</th>
-              <th>Discourse</th>
-              <th>USRs</th>
-              <th>Actions</th>
-              <th>Status</th>
-            </tr>
+          <div class="dis_table_row1">
+            <div class="dis_table_col">
+              S.No
+            </div>
+            <div class="dis_table_col">
+              Discourse
+            </div>
+            <div class="dis_table_col">
+              USRs
+            </div>
+            <div class="dis_table_col">
+              Actions
+            </div>
+            <div class="dis_table_col">
+              Status
+            </div>
+          </div>
 
-            {users.length > 0 && (
-              <ol>
-                {users.map(user => (
-                  <tr>
-                    <td>1</td>
-                    <td>{user.sentences}</td>
-                    <td>
-                      <div class="popup" onclick="{myFunction()}">Click me!
-                        <span class="popuptext" id="myPopup">{user.sentences}</span>
-                      </div>
-                    </td>
-                    <td>{user.orignal_USR_json}</td>
-                    <td>
-                      <button class="but">
-                        <a href="http://localhost:3000/usrgenerate">
-                          <FaEye id="action_button" size="30px" color="black"></FaEye>
-                        </a>
-                      </button>
-                      <button class="but">
-                        <a href="http://localhost:3000/usrgenerate">
-                          <FaEdit id="action_button" size="30px" color="black"></FaEdit>
-                        </a>
-                      </button>
-                      <button>
-                        <a href="http://localhost:3000/usrgenerate">
-                          <FaTrash id="action_button" size="30px" color="black"></FaTrash>
-                        </a>
-                      </button>
-                    </td>
-                    <td>Approved</td>
-                  </tr>
-                ))}
-              </ol>
-            )}
-          </table>
+          {users.length > 0 && (
+            <ol>
+              {users.map(user => (
+                <div class="dis_table_row">
+                  <div class="dis_table_col">{counter += 1}</div>
+                  {/* <div class="dis_table_col">{this.setState(({ length }) => ({ length: length + 1 }));}</div> */}
+                  <div class="dis_table_col">{user.sentences}</div>
+                  <div class="dis_table_col">
+                    <Popup trigger=
+                      {<a className="usr_a"> USR {counter2 += 1} </a>}
+                      modal nested>
+                      {
+                        close => (
+                          <div className='modal'>
+                            <div className='content'>
+                              {user.orignal_USR_json}
+                            </div>
+                            <div>
+                              <button onClick=
+                                {() => close()}>
+                                Close
+                              </button>
+                            </div>
+                          </div>
+                        )
+                      }
+                    </Popup>
+                  </div>
+                  <div class="dis_table_col">
+                    <button class="but">
+                      <a href="http://localhost:3000/usrgenerate">
+                        <FaEye id="action_button" size="30px" color="black"></FaEye>
+                      </a>
+                    </button>
+                    <button class="but">
+                      <a href="http://localhost:3000/usrgenerate">
+                        <FaEdit id="action_button" size="30px" color="black"></FaEdit>
+                      </a>
+                    </button>
+                    <button class="but">
+                      <a href="http://localhost:3000/usrgenerate">
+                        <FaTrash id="action_button" size="30px" color="black"></FaTrash>
+                      </a>
+                    </button>
+                  </div>
+                  <div class="dis_table_col">Approved</div>
+
+                </div>
+              ))}
+            </ol>
+          )}
         </div>
       </div>
     </>
