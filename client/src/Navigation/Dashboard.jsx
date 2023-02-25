@@ -85,11 +85,11 @@ const Dashboard = () => {
           <button onClick={refreshPage}>Click to reload!</button>
         </div> */}
 
-        {/* <div class="discourse_but">
+        <div class="discourse_but">
           <Button variant="contained" href="http://localhost:9999/dash_out">
             See Discourses
           </Button>
-        </div> */}
+        </div>
         <div class="dis_table">
           <div class="dis_table_row1">
             <div class="dis_table_col">
