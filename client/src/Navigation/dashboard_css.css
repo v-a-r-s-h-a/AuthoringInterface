@@ -54,8 +54,8 @@ a { cursor: pointer; }
     text-align: center;
     justify-content: center;
     width: 20%;
+    word-wrap: break-word;
 }
-
 
 .but, .usr_a{
     color: black;

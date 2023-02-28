@@ -123,157 +123,150 @@ def login():
 def logout():
     session["email"] = None
     return redirect("http://localhost:3000/")
-    # if request.method == 'GET':
-    #     if session['loggedin'] == True:
-    #         session['loggedin'] = False
-    #         return redirect('http://localhost:3000/')
-    #     else:
-    #         return redirect('http://localhost:3000/')
-    # return redirect('http://localhost:3000/usrgenerate')
 
-
-# @app.route('/usrgenerate', methods=['GET', 'POST'])
-# @cross_origin()
-# # @login_required
-# def usrgenerate():
-#     if request.method == "POST" and 'sentences' in request.form and 'discourse_name' in request.form:
-#         sentences = request.form['sentences']
-#         discourse_name = request.form['discourse_name']
-#         email = session.get('email')
-
-#         # if request.form.get('Save Sentences') == 'Save discourse':
-#         # Saving user details to the discourse table
-#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-#         cursor.execute(
-#             "SELECT author_id FROM author WHERE email = %s", [email])
-#         author_id = (cursor.fetchone())['author_id']
-#         cursor.execute("INSERT INTO discourse(author_id, sentences, discourse_name) VALUES(%s, %s, %s)",
-#                        (author_id, sentences, discourse_name))
-#         mysql.connection.commit()
-#         row_id = cursor.lastrowid
-#         list_usr = list(displayUSR(sentences))
-
-#         # saving generated usr in database in usr table
-#         for i in range(len(list_usr)):
-#             cursor.execute("INSERT INTO usr(author_id,discourse_id,sentence_id,orignal_USR_json) VALUES(%s,%s,%s,%s)",
-#                            (author_id, row_id, 1, displayUSR(sentences)[i]))
-#         #    {'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': ['', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
-
-#         mysql.connection.commit()
-
-#         # saving sentence entered by user in updatedSentence.txt
-#         with open("client/public/updatedSentence.txt", "w") as sentfile:
-#             str2 = ""
-#             str_end = ["।", "|", "?", "."]
-#             for word in sentences:
-#                 str2 += word
-#                 if word in str_end:
-#                     str2 = str2.strip()
-#                     sentfile.write(str2+"\n")
-#                     str2 = ""
-
-#         # saving generated usr in data.json
-#         with open("client/src/data/data.json", "w") as f:
-#             f.write(str(list_usr).replace("'", '"'))
-#             f.close()
-#             flash("USR Generated")
-
-#         return jsonify(message='USR Generated!')
 
 @app.route('/usrgenerate', methods=['GET', 'POST'])
+@cross_origin()
+# @login_required
 def usrgenerate():
-    global dis_id
-    if request.method == "POST":
-        data = request.get_json()
-        sentences = data.get('sentences')
-        discourse_name = data.get('discourse_name')
+    if request.method == "POST" and 'sentences' in request.form and 'discourse_name' in request.form:
+        sentences = request.form['sentences']
+        discourse_name = request.form['discourse_name']
+        email = session.get('email')
 
+        # if request.form.get('Save Sentences') == 'Save discourse':
+        # Saving user details to the discourse table
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute(
-            'SELECT author_name FROM author WHERE author_id = % s ', (auth_id, ))
-        author_id = cursor.fetchone()
-
-        # sent = "एक समय की बात है। एक शेर जंगल में सो रहा था। एक चूहा शेर पर चढ़ कर उछल कूद कर रहा था। शेर की नींद टूट जाती है। वो चूहे पर बहुत गुस्सा करता है। चूहा उससे यह विनती करता है। वह उसे जाने की अनुमति दे। एक दिन वह उसकी सहायता करेगा। चूहे की बात सुनकर शेर हंसता है। कुछ महीने के बाद एक दिन जंगल में शिकारी आते है। वो शेर को पकड़ लेते है। उसे रस्सी से बांध देते है। शेर खुद को छुड़ाने की पूरी कोशिश करता है। वह परेशान होकर ज़ोर से दहाड़ने लगता है।"
-
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            "SELECT author_id FROM author WHERE email = %s", [email])
+        author_id = (cursor.fetchone())['author_id']
         cursor.execute("INSERT INTO discourse(author_id, sentences, discourse_name) VALUES(%s, %s, %s)",
-                       (auth_id, sentences, discourse_name))
+                       (author_id, sentences, discourse_name))
+        mysql.connection.commit()
+        row_id = cursor.lastrowid
+        list_usr = list(displayUSR(sentences))
+
+        # saving generated usr in database in usr table
+        for i in range(len(list_usr)):
+            cursor.execute("INSERT INTO usr(author_id,discourse_id,sentence_id,orignal_USR_json) VALUES(%s,%s,%s,%s)",
+                           (author_id, row_id, 1, displayUSR(sentences)[i]))
+        #    {'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': ['', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
+
         mysql.connection.commit()
 
-        row_id = cursor.lastrowid
-        dis_id = row_id
+        # saving sentence entered by user in updatedSentence.txt
+        with open("client/public/updatedSentence.txt", "w") as sentfile:
+            str2 = ""
+            str_end = ["।", "|", "?", "."]
+            for word in sentences:
+                str2 += word
+                if word in str_end:
+                    str2 = str2.strip()
+                    sentfile.write(str2+"\n")
+                    str2 = ""
 
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        # cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)",(auth_id, dis_id, {'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': ['', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
-        # cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)",(auth_id, dis_id, {'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': ['', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
-        # mysql.connection.commit()
+        # saving generated usr in data.json
+        with open("client/src/data/data.json", "w") as f:
+            f.write(str(list_usr).replace("'", '"'))
+            f.close()
+            flash("USR Generated")
 
-        if (sentences == "एक समय की बात है। एक शेर जंगल में सो रहा था। एक चूहा शेर पर चढ़ कर उछल कूद कर रहा था। शेर की नींद टूट जाती है। वो चूहे पर बहुत गुस्सा करता है। चूहा उससे यह विनती करता है। वह उसे जाने की अनुमति दे। एक दिन वह उसकी सहायता करेगा। चूहे की बात सुनकर शेर हंसता है। कुछ महीने के बाद एक दिन जंगल में शिकारी आते है। वो शेर को पकड़ लेते है। उसे रस्सी से बांध देते है। शेर खुद को छुड़ाने की पूरी कोशिश करता है। वह परेशान होकर ज़ोर से दहाड़ने लगता है।"):
+        return jsonify(message='USR Generated!')
 
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['eka_1', 'samaya_1', 'bAwa_1', 'hE_1-pres'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
-                           '', '', '', ''], 'GNP': ['', '[m sg a]', '', '[f sg a]'], 'DepRel': ['2:card', '3:r6', '4:k1', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
-                           '', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['eka_1', 'cUhA_1', 'Sera_1', 'caDZa_1', 'uCala_1', 'kUxa_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4, 5, 6], 'SemCateOfNouns': ['', '', '', '', '', ''], 'GNP': [
-                           '', '[m sg a]', '[m sg a]', '', '[- - -]', ''], 'DepRel': ['3:card', '3:mod', '4:k7', '6:vmod', '6:vmod', '0:main'], 'Discourse': ['', '', '', '', '', ''], 'SpeakersView': ['', '', '', '', '', ''], 'Scope': ['', '', '', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['Sera_1', 'nIMxa_1', 'tUta_1-wA_hE_1'], 'Index': [1, 2, 3], 'SemCateOfNouns': [
-                           '', '', ''], 'GNP': ['[m sg a]', '[f sg a]', ''], 'DepRel': ['2:r6', '3:k1', '0:main'], 'Discourse': ['', '', ''], 'SpeakersView': ['', '', ''], 'Scope': ['', '', ''], 'SentenceType': ['affirmative']}, ))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['vaha', 'cUhA_1', 'bahuwa_1', 'gussA+kara_1-wA_hE_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
-                           '', '', '', ''], 'GNP': ['[- sg a]', '[m pl a]', '', ''], 'DepRel': ['2:nmod__adj', '4:k7', '4:nmod__adj', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['cUhA_1', 'vaha', 'yaha', 'vinawI+kara_1-wA_hE_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
-                           '', '', '', ''], 'GNP': ['[m sg a]', '[- sg a]', '', ''], 'DepRel': ['4:k1', '4:k2', '4:nmod__adj', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['vaha', 'vaha', 'jAna_1-yA_1', 'anumawi+xe_1-yA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
-                           '', '', '', ''], 'GNP': ['[- sg a]', '[- sg a]', '', ''], 'DepRel': ['3:k2', '3:k2', '4:k2', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['eka_1', 'xina_1', 'vaha', 'vaha', 'sahAyawA+kara_1-gA_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': ['', 'per', '', '', ''], 'GNP': [
-                           '', '[m sg a]', '[- sg a]', '[- sg a]', ''], 'DepRel': ['2:card', '5:k7t', '5:k2', '5:k2', '0:main'], 'Discourse': ['', '', '', '', ''], 'SpeakersView': ['', '', '', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['cUhA_1', 'bAwa_1', 'suna_1', 'Sera_1', 'haMsa_1-wA_hE_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': ['', '', 'per', '', ''], 'GNP': [
-                           '[m pl a]', '[f sg a]', '', '[m sg a]', ''], 'DepRel': ['2:r6', '3:k2', '5:vmod', '5:k1', '0:main'], 'Discourse': ['', '', '', '', ''], 'SpeakersView': ['', '', '', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['kuCa_1', 'mahInA_1', 'bAxa_1', 'eka_1', 'xina_1', 'jaMgala_1', 'SikArI_1', 'A_1-pres'], 'Index': [1, 2, 3, 4, 5, 6, 7, 8], 'SemCateOfNouns': ['', '', '', '', 'per', '', '', ''], 'GNP': [
-                           '', '[m pl a]', '', '', '[m sg a]', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:nmod__adj', '8:k7t', '2:lwg__psp', '5:card', '8:k7t', '8:k7p', '8:k1', '0:main'], 'Discourse': ['', '', '', '', '', '', '', ''], 'SpeakersView': ['', '', '', '', '', '', '', ''], 'Scope': ['', '', '', '', '', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['vaha', 'Sera_1', 'pakadZa_1-pres'], 'Index': [1, 2, 3], 'SemCateOfNouns': [
-                           '', '', ''], 'GNP': ['[- sg a]', '[m sg a]', ''], 'DepRel': ['2:nmod__adj', '3:k2', '0:main'], 'Discourse': ['', '', ''], 'SpeakersView': ['', '', ''], 'Scope': ['', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['vaha', 'rassI_1', 'bAMXa_1-pres'], 'Index': [1, 2, 3], 'SemCateOfNouns': [
-                           '', '', ''], 'GNP': ['[- sg a]', '[f sg a]', ''], 'DepRel': ['3:k2', '3:k3', '0:main'], 'Discourse': ['', '', ''], 'SpeakersView': ['', '', ''], 'Scope': ['', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['Sera_1', 'Kuxa', 'CudZA_1-yA_1', 'pUrA_1', 'koSiSa+kara_1-wA_hE_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': [
-                           '', '', '', '', ''], 'GNP': ['[m sg a]', '', '', '', ''], 'DepRel': ['5:k1', '3:k2', '5:k2', '5:mod', '0:main'], 'Discourse': ['', '', '', '', ''], 'SpeakersView': ['', '', '', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['vaha', 'pareSAna+ho_1', 'jZora_1', 'xahAdZa_1-wA_hE_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
-                           '', '', '', ''], 'GNP': ['[- sg a]', '', '', ''], 'DepRel': ['4:k1', '4:vmod', '4:adv', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
+# @app.route('/usrgenerate', methods=['GET', 'POST'])
+# def usrgenerate():
+#     global dis_id
+#     if request.method == "POST":
+#         data = request.get_json()
+#         sentences = data.get('sentences')
+#         discourse_name = data.get('discourse_name')
 
-        else:
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['addressee', 'piCalA_8', 'aXyAya_1', 'globa_1', 'mahawwva_6', 'paDZa_7-0_cukA_hE_1'], 'Index': [1, 2, 3, 4, 5, 6], 'SemCateOfNouns': ['anim', '', '', '', '', ''], 'GNP': [
-                           '[m sg m]', '', '[- sg a]', '[- sg a]', '[- sg a]', ''], 'DepRel': ['6:k1', '3:mod', '6:k7p', '5:r6', '6:k7', '0:main'], 'Discourse': ['', '', '', '', '', ''], 'SpeakersView': ['respect', '', '', '', '', ''], 'Scope': ['', '', '', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['globa_1', 'aXyayana+kara_2', 'kuCa_1', 'sImA_6', 'ho_1-wA_hE_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': [
-                           '', '', '', '', ''], 'GNP': ['[- sg a]', '', '', '[- pl a]', ''], 'DepRel': ['2:k3', '4:r6', '4:quant', '5:k1', '0:main'], 'Discourse': ['', '', '', '', ''], 'SpeakersView': ['', '', '', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['speaker', 'pUrA_3', 'pqWvI_1', 'aXyayana+kara_2', 'cAha_8-wA_hE_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': [
-                           'anim', '', '', '', ''], 'GNP': ['[- pl u]', '', '[- sg a]', '', ''], 'DepRel': ['5:k1', '3:mod', '4:r6', '5:k2', '0:main'], 'Discourse': ['', '', '', '', ''], 'SpeakersView': ['', '', 'def', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['globa_1', 'speaker', 'kAPI_1', 'upayogI_1', 'sAbiwa+ho_1-wA_hE_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': ['', 'anim', '', '', ''], 'GNP': [
-                           '[- sg a]', '[- pl u]', '', '', ''], 'DepRel': ['5:k1', '5:rt', '4:intf', '5:k2', '0:main'], 'Discourse': ['', '', '', '', 'Geo_ncert_6stnd_4ch_0003a.5:conditional'], 'SpeakersView': ['', '', '', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['speaker', 'pqWvI', 'eka_1', 'BAga_2', 'apanA', 'xeSa_1', 'rAjya_7', 'jilA_3', 'Sahara_2', 'gAzva_1', 'aXyayana+kara_2,cAha_8-wA_hE_1'], 'Index': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'SemCateOfNouns': ['anim', '', '', '', '', '', '', '', '', '', '', ''], 'GNP': [
-                           '[- pl u]', '[- sg a]', '', '[- sg a]', '', '[- sg a]', '[- pl a]', '[- pl a]', '[- pl a]', '[- pl a]', '', ''], 'DepRel': ['12:k1', '4:r6', '4:card', '11:k7', '6:r6', '4:re', '4:re', '4:re', '4:re', '4:re', '12:k2', '0:main'], 'Discourse': ['', '', '', '', '1:coref', '', '', '', '', '', '', ''], 'SpeakersView': ['', '', 'kevala', '', '', '', '', '', '', '', '', ''], 'Scope': ['', '', '', '', '', '', '', '', '', '', '', ''], 'SentenceType': ['affirmative']}))
-            mysql.connection.commit()
-            cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['yaha', 'speaker', 'uwanA_1', 'upayogI_1', 'nahIM_1', 'sAbiwa+ho_1-wA_hE_1'], 'Index': [1, 2, 3, 4, 5, 6], 'SemCateOfNouns': ['', '', '', '', '', ''], 'GNP': ['[- sg a]', '[- pl u]', '', '', '', ''], 'DepRel': [
-                           '5:k1', '5:rt', '4:intf', '5:k2', '5:neg', '0:main'], 'Discourse': ['Geo_ncert_6stnd_4ch_0004a.12:coref', '', '', '', 'Geo_ncert_6stnd_4ch_0003b.6:contrast', 'Geo_ncert_6stnd_4ch_0004a.12:conditional'], 'SpeakersView': ['', '', '', '', '', ''], 'Scope': ['', '', '', '', '', ''], 'SentenceType': ['negative']}))
-            mysql.connection.commit()
+#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         cursor.execute(
+#             'SELECT author_name FROM author WHERE author_id = % s ', (auth_id, ))
+#         author_id = cursor.fetchone()
 
-        return jsonify("generated Successfully")
+#         # sent = "एक समय की बात है। एक शेर जंगल में सो रहा था। एक चूहा शेर पर चढ़ कर उछल कूद कर रहा था। शेर की नींद टूट जाती है। वो चूहे पर बहुत गुस्सा करता है। चूहा उससे यह विनती करता है। वह उसे जाने की अनुमति दे। एक दिन वह उसकी सहायता करेगा। चूहे की बात सुनकर शेर हंसता है। कुछ महीने के बाद एक दिन जंगल में शिकारी आते है। वो शेर को पकड़ लेते है। उसे रस्सी से बांध देते है। शेर खुद को छुड़ाने की पूरी कोशिश करता है। वह परेशान होकर ज़ोर से दहाड़ने लगता है।"
+
+#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         cursor.execute("INSERT INTO discourse(author_id, sentences, discourse_name) VALUES(%s, %s, %s)",
+#                        (auth_id, sentences, discourse_name))
+#         mysql.connection.commit()
+
+#         row_id = cursor.lastrowid
+#         dis_id = row_id
+
+#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         # cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)",(auth_id, dis_id, {'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': ['', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
+#         # cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)",(auth_id, dis_id, {'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': ['', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
+#         # mysql.connection.commit()
+
+#         if (sentences == "एक समय की बात है। एक शेर जंगल में सो रहा था। एक चूहा शेर पर चढ़ कर उछल कूद कर रहा था। शेर की नींद टूट जाती है। वो चूहे पर बहुत गुस्सा करता है। चूहा उससे यह विनती करता है। वह उसे जाने की अनुमति दे। एक दिन वह उसकी सहायता करेगा। चूहे की बात सुनकर शेर हंसता है। कुछ महीने के बाद एक दिन जंगल में शिकारी आते है। वो शेर को पकड़ लेते है। उसे रस्सी से बांध देते है। शेर खुद को छुड़ाने की पूरी कोशिश करता है। वह परेशान होकर ज़ोर से दहाड़ने लगता है।"):
+
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['eka_1', 'samaya_1', 'bAwa_1', 'hE_1-pres'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
+#                            '', '', '', ''], 'GNP': ['', '[m sg a]', '', '[f sg a]'], 'DepRel': ['2:card', '3:r6', '4:k1', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['eka_1', 'Sera_1', 'jaMgala_1', 'so_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
+#                            '', '', '', ''], 'GNP': ['', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:card', '4:k1', '4:k7p', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['eka_1', 'cUhA_1', 'Sera_1', 'caDZa_1', 'uCala_1', 'kUxa_1-0_rahA_WA_1'], 'Index': [1, 2, 3, 4, 5, 6], 'SemCateOfNouns': ['', '', '', '', '', ''], 'GNP': [
+#                            '', '[m sg a]', '[m sg a]', '', '[- - -]', ''], 'DepRel': ['3:card', '3:mod', '4:k7', '6:vmod', '6:vmod', '0:main'], 'Discourse': ['', '', '', '', '', ''], 'SpeakersView': ['', '', '', '', '', ''], 'Scope': ['', '', '', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['Sera_1', 'nIMxa_1', 'tUta_1-wA_hE_1'], 'Index': [1, 2, 3], 'SemCateOfNouns': [
+#                            '', '', ''], 'GNP': ['[m sg a]', '[f sg a]', ''], 'DepRel': ['2:r6', '3:k1', '0:main'], 'Discourse': ['', '', ''], 'SpeakersView': ['', '', ''], 'Scope': ['', '', ''], 'SentenceType': ['affirmative']}, ))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['vaha', 'cUhA_1', 'bahuwa_1', 'gussA+kara_1-wA_hE_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
+#                            '', '', '', ''], 'GNP': ['[- sg a]', '[m pl a]', '', ''], 'DepRel': ['2:nmod__adj', '4:k7', '4:nmod__adj', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['cUhA_1', 'vaha', 'yaha', 'vinawI+kara_1-wA_hE_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
+#                            '', '', '', ''], 'GNP': ['[m sg a]', '[- sg a]', '', ''], 'DepRel': ['4:k1', '4:k2', '4:nmod__adj', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['vaha', 'vaha', 'jAna_1-yA_1', 'anumawi+xe_1-yA_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
+#                            '', '', '', ''], 'GNP': ['[- sg a]', '[- sg a]', '', ''], 'DepRel': ['3:k2', '3:k2', '4:k2', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['eka_1', 'xina_1', 'vaha', 'vaha', 'sahAyawA+kara_1-gA_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': ['', 'per', '', '', ''], 'GNP': [
+#                            '', '[m sg a]', '[- sg a]', '[- sg a]', ''], 'DepRel': ['2:card', '5:k7t', '5:k2', '5:k2', '0:main'], 'Discourse': ['', '', '', '', ''], 'SpeakersView': ['', '', '', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['cUhA_1', 'bAwa_1', 'suna_1', 'Sera_1', 'haMsa_1-wA_hE_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': ['', '', 'per', '', ''], 'GNP': [
+#                            '[m pl a]', '[f sg a]', '', '[m sg a]', ''], 'DepRel': ['2:r6', '3:k2', '5:vmod', '5:k1', '0:main'], 'Discourse': ['', '', '', '', ''], 'SpeakersView': ['', '', '', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['kuCa_1', 'mahInA_1', 'bAxa_1', 'eka_1', 'xina_1', 'jaMgala_1', 'SikArI_1', 'A_1-pres'], 'Index': [1, 2, 3, 4, 5, 6, 7, 8], 'SemCateOfNouns': ['', '', '', '', 'per', '', '', ''], 'GNP': [
+#                            '', '[m pl a]', '', '', '[m sg a]', '[m sg a]', '[m sg a]', ''], 'DepRel': ['2:nmod__adj', '8:k7t', '2:lwg__psp', '5:card', '8:k7t', '8:k7p', '8:k1', '0:main'], 'Discourse': ['', '', '', '', '', '', '', ''], 'SpeakersView': ['', '', '', '', '', '', '', ''], 'Scope': ['', '', '', '', '', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['vaha', 'Sera_1', 'pakadZa_1-pres'], 'Index': [1, 2, 3], 'SemCateOfNouns': [
+#                            '', '', ''], 'GNP': ['[- sg a]', '[m sg a]', ''], 'DepRel': ['2:nmod__adj', '3:k2', '0:main'], 'Discourse': ['', '', ''], 'SpeakersView': ['', '', ''], 'Scope': ['', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['vaha', 'rassI_1', 'bAMXa_1-pres'], 'Index': [1, 2, 3], 'SemCateOfNouns': [
+#                            '', '', ''], 'GNP': ['[- sg a]', '[f sg a]', ''], 'DepRel': ['3:k2', '3:k3', '0:main'], 'Discourse': ['', '', ''], 'SpeakersView': ['', '', ''], 'Scope': ['', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['Sera_1', 'Kuxa', 'CudZA_1-yA_1', 'pUrA_1', 'koSiSa+kara_1-wA_hE_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': [
+#                            '', '', '', '', ''], 'GNP': ['[m sg a]', '', '', '', ''], 'DepRel': ['5:k1', '3:k2', '5:k2', '5:mod', '0:main'], 'Discourse': ['', '', '', '', ''], 'SpeakersView': ['', '', '', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['vaha', 'pareSAna+ho_1', 'jZora_1', 'xahAdZa_1-wA_hE_1'], 'Index': [1, 2, 3, 4], 'SemCateOfNouns': [
+#                            '', '', '', ''], 'GNP': ['[- sg a]', '', '', ''], 'DepRel': ['4:k1', '4:vmod', '4:adv', '0:main'], 'Discourse': ['', '', '', ''], 'SpeakersView': ['', '', '', ''], 'Scope': ['', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+
+#         else:
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['addressee', 'piCalA_8', 'aXyAya_1', 'globa_1', 'mahawwva_6', 'paDZa_7-0_cukA_hE_1'], 'Index': [1, 2, 3, 4, 5, 6], 'SemCateOfNouns': ['anim', '', '', '', '', ''], 'GNP': [
+#                            '[m sg m]', '', '[- sg a]', '[- sg a]', '[- sg a]', ''], 'DepRel': ['6:k1', '3:mod', '6:k7p', '5:r6', '6:k7', '0:main'], 'Discourse': ['', '', '', '', '', ''], 'SpeakersView': ['respect', '', '', '', '', ''], 'Scope': ['', '', '', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['globa_1', 'aXyayana+kara_2', 'kuCa_1', 'sImA_6', 'ho_1-wA_hE_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': [
+#                            '', '', '', '', ''], 'GNP': ['[- sg a]', '', '', '[- pl a]', ''], 'DepRel': ['2:k3', '4:r6', '4:quant', '5:k1', '0:main'], 'Discourse': ['', '', '', '', ''], 'SpeakersView': ['', '', '', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['speaker', 'pUrA_3', 'pqWvI_1', 'aXyayana+kara_2', 'cAha_8-wA_hE_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': [
+#                            'anim', '', '', '', ''], 'GNP': ['[- pl u]', '', '[- sg a]', '', ''], 'DepRel': ['5:k1', '3:mod', '4:r6', '5:k2', '0:main'], 'Discourse': ['', '', '', '', ''], 'SpeakersView': ['', '', 'def', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['globa_1', 'speaker', 'kAPI_1', 'upayogI_1', 'sAbiwa+ho_1-wA_hE_1'], 'Index': [1, 2, 3, 4, 5], 'SemCateOfNouns': ['', 'anim', '', '', ''], 'GNP': [
+#                            '[- sg a]', '[- pl u]', '', '', ''], 'DepRel': ['5:k1', '5:rt', '4:intf', '5:k2', '0:main'], 'Discourse': ['', '', '', '', 'Geo_ncert_6stnd_4ch_0003a.5:conditional'], 'SpeakersView': ['', '', '', '', ''], 'Scope': ['', '', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['speaker', 'pqWvI', 'eka_1', 'BAga_2', 'apanA', 'xeSa_1', 'rAjya_7', 'jilA_3', 'Sahara_2', 'gAzva_1', 'aXyayana+kara_2,cAha_8-wA_hE_1'], 'Index': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'SemCateOfNouns': ['anim', '', '', '', '', '', '', '', '', '', '', ''], 'GNP': [
+#                            '[- pl u]', '[- sg a]', '', '[- sg a]', '', '[- sg a]', '[- pl a]', '[- pl a]', '[- pl a]', '[- pl a]', '', ''], 'DepRel': ['12:k1', '4:r6', '4:card', '11:k7', '6:r6', '4:re', '4:re', '4:re', '4:re', '4:re', '12:k2', '0:main'], 'Discourse': ['', '', '', '', '1:coref', '', '', '', '', '', '', ''], 'SpeakersView': ['', '', 'kevala', '', '', '', '', '', '', '', '', ''], 'Scope': ['', '', '', '', '', '', '', '', '', '', '', ''], 'SentenceType': ['affirmative']}))
+#             mysql.connection.commit()
+#             cursor.execute("INSERT INTO usr(author_id, discourse_id, orignal_USR_json) VALUES(%s, %s, %s)", (auth_id, dis_id, {'Concept': ['yaha', 'speaker', 'uwanA_1', 'upayogI_1', 'nahIM_1', 'sAbiwa+ho_1-wA_hE_1'], 'Index': [1, 2, 3, 4, 5, 6], 'SemCateOfNouns': ['', '', '', '', '', ''], 'GNP': ['[- sg a]', '[- pl u]', '', '', '', ''], 'DepRel': [
+#                            '5:k1', '5:rt', '4:intf', '5:k2', '5:neg', '0:main'], 'Discourse': ['Geo_ncert_6stnd_4ch_0004a.12:coref', '', '', '', 'Geo_ncert_6stnd_4ch_0003b.6:contrast', 'Geo_ncert_6stnd_4ch_0004a.12:conditional'], 'SpeakersView': ['', '', '', '', '', ''], 'Scope': ['', '', '', '', '', ''], 'SentenceType': ['negative']}))
+#             mysql.connection.commit()
+
+#         return jsonify("generated Successfully")
 
 
 @app.route('/about')
@@ -338,25 +331,6 @@ def dash_out():
         return redirect('http://localhost:3000/dashboard')
 
 
-# @app.route('/dash_out', methods=['GET'])
-# def dash_out():
-#     if request.method == 'GET':
-#         # session['email'] = request.form['email']
-#         email = session.get('email')
-#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-#         cursor.execute(
-#             "SELECT author_id FROM author WHERE email = %s", [email])
-#         author_id = (cursor.fetchone())['author_id']
-#         print(author_id)
-#         cursor.execute(
-#             "SELECT sentences FROM discourse WHERE author_id = %s", [author_id])
-#         sentences = cursor.fetchall()
-#         mysql.connection.commit()
-#         print(sentences)
-#         print(len(sentences))
-#         return redirect('http://localhost:3000/dashboard')
-
-
 @app.route('/authors')
 def author():
     try:
@@ -419,18 +393,62 @@ def discourse():
         print(e)
 
 
+@app.route('/uni_discourse')
+def uni_discourse():
+    try:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(
+            "SELECT distinct discourse.discourse_id,sentences,USR_status FROM discourse JOIN usr ON discourse.discourse_id=usr.discourse_id")
+        disRows = cursor.fetchall()
+        respone = jsonify(disRows)
+        respone.status_code = 200
+        return respone
+    except Exception as e:
+        print(e)
+
+
 @app.route('/dash_data')
 def dash_data():
     try:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute(
-            "SELECT discourse.discourse_id, discourse.author_id, discourse.no_sentences, discourse.domain,discourse.create_date, discourse.other_attributes, discourse.sentences, discourse.discourse_name,usr.author_id, usr.discourse_id, usr.sentence_id, usr.USR_ID, usr.orignal_USR_json, usr.final_USR, usr.create_date, usr.USR_status FROM discourse JOIN usr ON discourse.discourse_id=usr.discourse_id GROUP BY discourse.discourse_id")
+            "SELECT * FROM discourse JOIN usr ON discourse.discourse_id=usr.discourse_id")
         datarows = cursor.fetchall()
         respone = jsonify(datarows)
         respone.status_code = 200
         return respone
     except Exception as e:
         print(e)
+
+# @app.route('/dash_data', methods=['GET'])
+# def dash_data():
+#     try:
+#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         cursor.execute(
+#             "SELECT distinct discourse.discourse_id FROM discourse JOIN usr ON discourse.discourse_id=usr.discourse_id;")
+#         discourse_id = cursor.fetchall()
+#         print(discourse_id)
+
+#         mysql.connection.commit()
+#         for i in discourse_id:
+#             cursor.execute(
+#                 "SELECT sentences FROM discourse WHERE discourse_id = % s", [i])
+#             sentences = cursor.fetchall()
+#             # print(sentences)
+#             mysql.connection.commit()
+#             cursor.execute(
+#                 "SELECT orignal_USR_json FROM usr WHERE discourse_id = % s", [i])
+#             usr = cursor.fetchall()
+#             mysql.connection.commit()
+#             usr_list = [{'discourse': sentences, 'usr': usr}]
+#             print(usr_list)
+
+#         # return jsonify(message='Dashboard Generated!')
+#         respone = jsonify(usr_list)
+#         respone.status_code = 200
+#         return respone
+#     except Exception as e:
+#         print(e)
 
 
 @app.route('/USR')
