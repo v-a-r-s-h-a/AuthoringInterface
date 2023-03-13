@@ -170,9 +170,9 @@ const Dashboard = () => {
                   <div class="dis_table_col">
                     <button class="but">
                       <a href="http://localhost:3000/componentB">
-                        <div>
+                        {/* <div>
                           <componentB data={dis.sentences} />
-                        </div>
+                        </div> */}
                         <FaEye id="action_button" size="30px" color="black"></FaEye>
                       </a>
                     </button>

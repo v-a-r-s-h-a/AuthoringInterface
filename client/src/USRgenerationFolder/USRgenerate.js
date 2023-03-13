@@ -90,7 +90,7 @@ const USRgenerate = () => {
 
               <NavLink to="/dashboard">
 
-                <FaUser></FaUser> Username :{autnam.author_name}
+                <FaUser></FaUser> {autnam.author_name}
 
               </NavLink>
 
