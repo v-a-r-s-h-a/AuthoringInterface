@@ -10,7 +10,7 @@ import Sentences from "./USRgenerationFolder/Sentences";
 import USR from "./USRgenerationFolder/USR";
 import { Routes, Route } from "react-router-dom";
 import Logout from "./Navigation/Logout";
-// import Test from "./Navigation/Test";
+import componentB from "./Navigation/componentB";
 
 
 function App() {
@@ -23,11 +23,12 @@ function App() {
       <Route path="/logout" element={<Logout />} />
       <Route path="/usrgenerate" element={<USRgenerate />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      {/* <Route path="/test" element={<Test />} /> */}
+      <Route path="/componentB" element={<componentB />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/sentences/" element={<Sentences />} />
       <Route path="/usr/" element={<USR />} />
     </Routes>
+
   );
 }
 

@@ -1,0 +1,56 @@
+.adcontent {
+  width: 45%;
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 2%;;
+  background: rgb(125, 184, 202);
+  box-shadow: -3px -3px 9px #aaa9a9a2, 3px 3px 7px rgb(15 15 15 / 67%);
+}
+.adcontent .field {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  position: relative;
+  padding-top: 26px;
+}
+.field input {
+  width: 50%;
+  height: 81%;
+  margin: auto;
+  font-size: 18px;
+  outline: none;
+  padding-top: 6px;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.438);
+  border-radius: 8px;
+  background: rgba(105, 105, 105, 0);
+}
+.field label {
+  font-size: 21px;
+  color: white;
+  margin:auto;
+}
+.adbutton {
+  margin-top: 40px;
+  margin-left: 175px;
+  padding-bottom: 100px;
+}
+.adbutton button {
+  border: 1px solid rgba(255, 255, 255, 0.438);
+  border-radius: 8px;
+  width: 116px;
+  height: 40px;
+}
+.headname {
+  margin-left: 191px;
+  color: white;
+  padding-top: 29px;
+}
+.radio {
+  margin-left: 139px;
+  margin-top: 49px;
+}
+.radio label {
+  font-size: 21px;
+  color: white;
+}

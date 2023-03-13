@@ -2,7 +2,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: black;
+  background: rgb(125, 184, 202);
   padding: 0px 13px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
 }
@@ -35,7 +35,7 @@ nav a {
 }
 #navbar li a:hover {
   background-color: white;
-  color: black;
+  color: rgb(125, 184, 202);
 }
 
 .cards {
@@ -57,64 +57,7 @@ nav a {
     color: black;
 }*/
 
-.adcontent {
-  width: 495px;
-  border-radius: 10px;
-  margin-left: 487px;
-  margin-top: 62px;
-  background: rgb(15 14 14 / 80%);
-  box-shadow: -3px -3px 9px #aaa9a9a2, 3px 3px 7px rgb(15 15 15 / 67%);
-}
-.adcontent .field {
-  height: 50px;
-  width: 100%;
-  display: flex;
-  position: relative;
-  padding-top: 26px;
-}
-.field input {
-  width: 274px;
-  height: 81%;
-  /* padding-left: 131px; */
-  margin-left: 33px;
-  font-size: 18px;
-  outline: none;
-  padding-top: 6px;
-  margin-top: -10px;
-  color: #e0d2d2;
-  border: 1px solid rgba(255, 255, 255, 0.438);
-  border-radius: 8px;
-  background: rgba(105, 105, 105, 0);
-}
-.field label {
-  font-size: 21px;
-  color: rgba(255, 255, 255, 0.438);
-  margin-left: 49px;
-}
-.adbutton {
-  margin-top: 40px;
-  margin-left: 175px;
-  padding-bottom: 100px;
-}
-.adbutton button {
-  border: 1px solid rgba(255, 255, 255, 0.438);
-  border-radius: 8px;
-  width: 116px;
-  height: 40px;
-}
-.headname {
-  margin-left: 191px;
-  color: white;
-  padding-top: 29px;
-}
-.radio {
-  margin-left: 139px;
-  margin-top: 49px;
-}
-.radio label {
-  font-size: 21px;
-  color: rgba(255, 255, 255, 0.438);
-}
+
 
 .radio2 {
   margin-left: -26px;

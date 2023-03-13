@@ -2,13 +2,17 @@ import { NavLink } from "react-router-dom";
 import { FaEdit, FaEye, FaPlusCircle, FaTrash, FaUser } from "react-icons/fa";
 import "./dashboard_css.css";
 import Button from "@material-ui/core/Button";
+// import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 import { useState, useEffect } from 'react';
-import getdata from "../services/test";
+// import getdata from "../services/test";
 // import TextField from '@material-ui/core/TextField';
 import React from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-import { Pages } from "@material-ui/icons";
+import { Link, useNavigate } from 'react-router-dom';
+import ComponentB from "./componentB";
+// import { Pages } from "@material-ui/icons";
 
 
 
@@ -22,7 +26,7 @@ const Dashboard = () => {
 
   let counter = 0;
 
-  let counter2 = 0;
+  var counter2 = 0;
 
   useEffect(() => {
     Promise.all([
@@ -66,7 +70,7 @@ const Dashboard = () => {
           <ul id="navbar">
             <li>
               <NavLink to="/dashboard">
-                <FaUser></FaUser> Username : {autnam.author_name}
+                <FaUser></FaUser> {autnam.author_name}
               </NavLink>
             </li>
             <li>
@@ -77,6 +81,8 @@ const Dashboard = () => {
           </ul>
         </div>
       </nav>
+
+      {/* <div class="truncated"><a href="#">kaj  askdfj ;askdf;askdfj ksadf ;asjdf ;ksad fsadjf ;kasd fa;sfjd ;ksadf;sad;fkl jsa;kfd;askdjf aksjd f;sajdf ;as aksjd;f as;dfkj as;kfdj a;sfaksaj d;fkasdf;asjfd ;sad  asdk</a></div> */}
 
       <div class="components">
         <div class="cards">
@@ -92,12 +98,6 @@ const Dashboard = () => {
         {/* <div>
           <button onClick={refreshPage}>Click to reload!</button>
         </div> */}
-
-        <div class="discourse_but">
-          <Button variant="contained" href="http://localhost:9999/dash_out">
-            See Discourses
-          </Button>
-        </div>
 
         <div class="dis_table">
           <div class="dis_table_row1">
@@ -123,34 +123,43 @@ const Dashboard = () => {
               {discourse.map(dis => (
                 <div class="dis_table_row">
                   <div class="dis_table_col">{counter += 1}</div>
-                  <div class="dis_table_col">{dis.sentences}</div>
+                  <div class="dis_table_col">
+                    <div class="expanded-text">
+                      {dis.sentences.length > 50
+                        ? <div class="short-name">{dis.sentences.substring(0, 50)}...</div>
+                        : <div class="short-name">{dis.sentences}</div>
+                      }
+                      <div class="longer-name">{dis.sentences}</div>
+                    </div>
+                  </div>
 
                   <div class="dis_table_col">
-                    {counter2 = 0}
                     {users.length > 0 && (
                       <ul>
+                        {counter2 = 0}
                         {users.map(user => {
                           return user.discourse_id === dis.discourse_id ? (
-                            <Popup trigger=
-                              {<a className="usr_a"> USR {counter2 += 1} </a>}
-                              modal nested>
-                              {
-                                close => (
-                                  <div className='modal'>
-                                    <div className='content'>
-                                      {user.orignal_USR_json}
+                            <div class="usr_buttons">
+                              <Popup trigger=
+                                {<a className="usr_a"> USR {counter2 += 1} </a>}
+                                modal nested>
+                                {
+                                  close => (
+                                    <div className='modal'>
+                                      <div className='content'>
+                                        {user.orignal_USR_json}
+                                      </div>
+                                      <div>
+                                        <button onClick=
+                                          {() => close()}>
+                                          Close
+                                        </button>
+                                      </div>
                                     </div>
-                                    <div>
-                                      <button onClick=
-                                        {() => close()}>
-                                        Close
-                                      </button>
-                                    </div>
-                                  </div>
-                                )
-                              }
-                            </Popup>
-
+                                  )
+                                }
+                              </Popup>
+                            </div>
                           ) : (
                             <h2></h2>
                           );
@@ -160,7 +169,10 @@ const Dashboard = () => {
                   </div>
                   <div class="dis_table_col">
                     <button class="but">
-                      <a href="http://localhost:3000/usrgenerate">
+                      <a href="http://localhost:3000/componentB">
+                        <div>
+                          <componentB data={dis.sentences} />
+                        </div>
                         <FaEye id="action_button" size="30px" color="black"></FaEye>
                       </a>
                     </button>
@@ -182,6 +194,9 @@ const Dashboard = () => {
           )}
         </div>
       </div >
+      {/* <Stack spacing={2}>
+        <Pagination count={10} showFirstButton showLastButton />
+      </Stack> */}
     </>
 
   );

@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
+import "./login_css.css"
 
 // import FlashMessage from 'react-flash-message'
 
@@ -97,7 +98,7 @@ const Signup = () => {
           </div>
 
           <div class="adbutton">
-            <button type="submit" value="SIGN UP" />
+            <button type="submit" value="SIGN UP" >SIGN UP</button>
           </div>
         </form>
       </div>

@@ -3,6 +3,7 @@ import "./style.css";
 import { NavLink } from "react-router-dom";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
+import "./login_css.css"
 
 const Login = () => {
   const navigate = useNavigate();
